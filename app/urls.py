@@ -16,6 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+
+from .views import LoginView, UserView, UsersBulkImportView, ConsumptionView, ConsumptionBulkImportView, AdministratorView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('prijava/', LoginView.as_view(), name="login"),
+    path('uporabnik/', UserView.as_view(), name="user"),
+    path('uvoz-uporabnikov/', UsersBulkImportView.as_view(), name="usersBulkImport"),
+    path('uvoz-porabe/', ConsumptionBulkImportView.as_view(), name="consumptionBulkImport"),
+    path('poraba/', ConsumptionView.as_view(), name="consumption"),
+    path('administrator/', AdministratorView.as_view(), name="administrator")
 ]

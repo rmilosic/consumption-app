@@ -71,10 +71,18 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'app.urls'
 
+
+SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
+
+
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, 'templates'),
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': TEMPLATE_DIRS,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,6 +150,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# STATICFILES_FINDERS = (
+#     "django.contrib.staticfiles.finders.FileSystemFinder",
+#     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+# )
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
