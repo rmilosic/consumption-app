@@ -2,6 +2,7 @@ from curses.ascii import HT
 from django.http import HttpResponse
 
 
+
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -9,9 +10,14 @@ def index(request):
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views import View
+from django.template import RequestContext, Template
+from django.template.loader import get_template
+
+
 from .forms import LoginForm
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
+
 
 
 
@@ -24,8 +30,8 @@ class LoginView(View):
         if request.user.is_authenticated:
             
             # redirect()
-            # TODO: redirect depending on user role
-            return render(request, self.template_name, {"form": form})
+            # TODO: redirect depending on user role - create custom permisions for User
+            return redirect("backend:user")
         else:
             form = LoginForm()
             # form = self.form_class(initial=self.initial)
@@ -46,7 +52,8 @@ class LoginView(View):
             # TODO: define responses
             if user is not None:
                 # A backend authenticated the credentials
-                return HttpResponse('logged in')
+                login(request, user)
+                return redirect("/uporabnik")
             else:
                 # No backend authenticated the credentials
                 # <process form cleaned data>
@@ -55,7 +62,11 @@ class LoginView(View):
         else:
             return HttpResponse("form not valid")
         # return render(request, self.template_name, {'form': form})
-    
+
+
+class LogoutView(View):
+    pass
+
 class UsersBulkImportView(View):
     # form_class = MyForm
     # initial = {'key': 'value'}
@@ -82,12 +93,12 @@ class ConsumptionBulkImportView(View):
 class UserView(View):
     # form_class = MyForm
     # initial = {'key': 'value'}
-    # template_name = 'form_template.html'
+    template_name = 'base_user.html'
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
-        # return render(request, self.template_name, {'form': form})
-        return HttpResponse("Uporabnik")
+        return render(request, self.template_name)
+        
     
     
 class ConsumptionView(View):

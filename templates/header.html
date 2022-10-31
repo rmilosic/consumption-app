@@ -13,7 +13,12 @@
     </ul>
 
     <div class="col-md-3 text-end">
-      <button type="button" class="btn btn-outline-primary me-2">Prijava</button>
+      {% if user.is_authenticated %}
+        <a  href="/admin/logout?next=/prijava" class="btn btn-outline-primary me-2">Odjava</a>
+        {% else %}
+
+          <a  href="{% url 'backend:login' %}" class="btn btn-outline-primary me-2">Prijava</a>
+      {% endif %}
     </div>
 </header>
 </div>

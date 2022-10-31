@@ -51,6 +51,7 @@ ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(",")
 # Application definition
 
 INSTALLED_APPS = [
+    'backend',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,7 +70,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'app.urls'
+ROOT_URLCONF = 'consumption_app.urls'
 
 
 SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -95,7 +96,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'app.wsgi.application'
+WSGI_APPLICATION = 'consumption_app.wsgi.application'
 
 
 # Database

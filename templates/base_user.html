@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block style %}
+
+
+    {% load static %}
+
+    
+{% endblock style %}
+    
+    
+
+  {% block title %}Uporabnik{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+
+  <h2>
+    Uporabnik
+  </h2>
+
+  Username: {{user.username}} <br/>
+  Email: {{user.email}}
+  
+</div
+
+    
+{% endblock content %}
