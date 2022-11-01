@@ -93,6 +93,15 @@
           {{ form }}
           <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">Prijava</button>
           </form>
+
+          {% for message in messages %}
+    
+              <div class="alert alert-success">
+                  <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+              </div>
+
+          {% endfor %}
       </main>
     </div>
   </div>

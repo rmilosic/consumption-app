@@ -23,5 +23,6 @@ from django.shortcuts import redirect, render
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("", include("django.contrib.auth.urls")),
     path('', include('backend.urls', namespace='backend'))
 ]

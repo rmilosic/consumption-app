@@ -1,5 +1,8 @@
 from curses.ascii import HT
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 
 
 
@@ -19,6 +22,17 @@ from .forms import LoginForm
 from django.contrib.auth import authenticate, login, logout
 
 
+class IndexView(View):
+    # redirect depending on user group
+    def get(self, request, *args, **kwargs):
+        
+        if request.user.groups.filter(name='admin').exists():
+        # Action if existing
+            # navigate to admin dashboard
+            return redirect("backend:administrator")
+        else:
+            # Action if not existing
+            return redirect("backend:user")
 
 
 class LoginView(View):
@@ -28,11 +42,11 @@ class LoginView(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            
-            # redirect()
-            # TODO: redirect depending on user role - create custom permisions for User
-            return redirect("backend:user")
+
+            return redirect("backend:index")
+        
         else:
+            
             form = LoginForm()
             # form = self.form_class(initial=self.initial)
             return render(request, self.template_name, {"form": form})
@@ -53,19 +67,22 @@ class LoginView(View):
             if user is not None:
                 # A backend authenticated the credentials
                 login(request, user)
-                return redirect("/uporabnik")
+                return redirect("backend:index")
             else:
                 # No backend authenticated the credentials
                 # <process form cleaned data>
-                return HttpResponse('not logged in')
+                messages.error(request,'username or password not correct')
+                return redirect("backend:login")
 
         else:
-            return HttpResponse("form not valid")
-        # return render(request, self.template_name, {'form': form})
+            
+            return redirect("backend:login")
 
 
 class LogoutView(View):
-    pass
+    def post(self, request, *args, **kwargs):
+        logout(request)        
+        return redirect("backend:login")
 
 class UsersBulkImportView(View):
     # form_class = MyForm
@@ -115,9 +132,9 @@ class ConsumptionView(View):
 class AdministratorView(View):
     # form_class = MyForm
     # initial = {'key': 'value'}
-    # template_name = 'form_template.html'
+    template_name = 'base_admin.html'
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
         # return render(request, self.template_name, {'form': form})
-        return HttpResponse("Administrator")
+        return render(request, self.template_name)

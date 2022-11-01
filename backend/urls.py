@@ -16,6 +16,8 @@ Including another URLconf
 from django.urls import path
 
 from django.views.generic.base import RedirectView
+from django.contrib.auth.decorators import login_required, permission_required
+
 
 from .views import *
 
@@ -23,9 +25,10 @@ app_name = 'backend'
 
 
 urlpatterns = [
-    path("", RedirectView.as_view(pattern_name="backend:login")),
+    path("", login_required(IndexView.as_view()), name="index"),
     path('prijava/', LoginView.as_view(), name="login"),
-    path('uporabnik/', UserView.as_view(), name="user"),
+    # path('odjava/', LogoutView.as_view(), name="logout"),
+    path('uporabnik/', login_required(UserView.as_view()), name="user"),
     path('uvoz-uporabnikov/', UsersBulkImportView.as_view(), name="usersBulkImport"),
     path('uvoz-porabe/', ConsumptionBulkImportView.as_view(), name="consumptionBulkImport"),
     path('poraba/', ConsumptionView.as_view(), name="consumption"),
