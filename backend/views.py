@@ -2,24 +2,16 @@ from curses.ascii import HT
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
 
-
-
-
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-
-
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views import View
-from django.template import RequestContext, Template
 from django.template.loader import get_template
 
-
-from .forms import LoginForm
-
 from django.contrib.auth import authenticate, login, logout
+
+from .forms import LoginForm, UploadUsersFromFileForm
+from .decorators import *
 
 
 class IndexView(View):
@@ -84,26 +76,46 @@ class LogoutView(View):
         logout(request)        
         return redirect("backend:login")
 
-class UsersBulkImportView(View):
+
+class UsersBulkImportView(UserPassesTestMixin, View):
     # form_class = MyForm
     # initial = {'key': 'value'}
-    # template_name = 'form_template.html'
+    template_name = 'base_usersBulkImport.html'
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
         # return render(request, self.template_name, {'form': form})
-        return HttpResponse("Uvoz uporabnikov")
+        form = UploadUsersFromFileForm()
+        return render(request, self.template_name, {"form": form})
     
+    def post(self, request, *args, **kwargs):
+        form = UploadUsersFromFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            # TODO: handle_uploaded_file(request.FILES['file'])
+            # show success message
+            
+            return render(request, self.template_name, {"form": form})
+        else:
+            form = UploadUsersFromFileForm()
+            # show error message
+        return render(request, self.template_name, {"form": form})
+        
+    def test_func(self):
+        return is_admin(self.request.user)
+
     
 class ConsumptionBulkImportView(View):
     # form_class = MyForm
     # initial = {'key': 'value'}
-    # template_name = 'form_template.html'
+    template_name = 'base_usersBulkImport.html'
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
         # return render(request, self.template_name, {'form': form})
-        return HttpResponse("Uvoz porabe")
+         return render(request, self.template_name)
+    
+    def post(self, request, *args, **kwargs):
+        pass
 
 
 
