@@ -1,5 +1,7 @@
 venv
 .env
+.vscode
+.env.int
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

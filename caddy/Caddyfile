@@ -1,0 +1,9 @@
+www.uniting-test.localhost {
+
+    reverse_proxy django_app:8000
+    
+}
+
+static.uniting-test.localhost {
+    file_server browse   
+}

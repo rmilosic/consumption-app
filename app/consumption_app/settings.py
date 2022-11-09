@@ -16,6 +16,18 @@ from django.urls import reverse
 import environ
 import os
 
+def get_env_file_path():
+    env = os.environ["ENVIRONMENT"]
+    
+    if env == "PROD":
+        return ".env.prod"
+    elif env == "INT":
+        return ".env.int"
+    else:
+        return ".env"
+        
+        
+    
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
@@ -25,7 +37,8 @@ env = environ.Env(
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+ENV_FILE_PATH = get_env_file_path()
+environ.Env.read_env(os.path.join(BASE_DIR, ENV_FILE_PATH))
 
 # False if not in os.environ because of casting above
 DEBUG = env('DEBUG')
@@ -155,7 +168,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = env("STATIC_URL")
 
 # STATICFILES_FINDERS = (
 #     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -165,6 +178,11 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+STATIC_ROOT = env("STATIC_ROOT")
+
+
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS").split(",")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

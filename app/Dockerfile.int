@@ -1,0 +1,14 @@
+FROM python:3.12.0a1-alpine3.16
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+
+RUN pip3 install -r requirements.txt
+COPY . .
+
+ENV ENVIRONMENT="INT"
+
+CMD ["python3", "-m", "uvicorn", "consumption_app.asgi:application", "--host=0.0.0.0"]

@@ -1,0 +1,55 @@
+services:
+
+  django_app:
+    container_name: django_app
+    restart: unless-stopped
+    build:
+      context: ./app
+      dockerfile: Dockerfile.int
+    ports:
+      - 8000:8000
+    volumes:
+      - ./app:/app
+      - static_files:/var/www/uniting/static/
+    networks:
+      - back-tier
+    depends_on:
+      - postgres
+      - caddy
+
+
+  caddy:
+    container_name: caddy
+    restart: unless-stopped
+    image: caddy:2.6-alpine
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - static_files:/srv
+    ports:
+      - 80:80
+      - 443:443
+      - 443:443/udp
+    networks:
+      - back-tier
+
+
+  postgres:
+    image: postgres:alpine3.14
+    restart: unless-stopped
+    container_name: postgres
+    networks:
+      - back-tier
+    env_file:
+      - ./db/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+
+networks:
+  back-tier:
+
+volumes:
+  postgres_data:
+  static_files:
