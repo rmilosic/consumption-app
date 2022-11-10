@@ -13,6 +13,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, UploadUsersFromFileForm
 from .decorators import *
 
+from .handlers import handle_file_upload_import_users
 
 class IndexView(View):
     # redirect depending on user group
@@ -91,7 +92,7 @@ class UsersBulkImportView(UserPassesTestMixin, View):
     def post(self, request, *args, **kwargs):
         form = UploadUsersFromFileForm(request.POST, request.FILES)
         if form.is_valid():
-            # TODO: handle_uploaded_file(request.FILES['file'])
+            handle_file_upload_import_users(request.FILES['file'])
             # show success message
             
             return render(request, self.template_name, {"form": form})

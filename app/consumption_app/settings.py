@@ -17,7 +17,10 @@ import environ
 import os
 
 def get_env_file_path():
-    env = os.environ["ENVIRONMENT"]
+    try:
+        env = os.environ["ENVIRONMENT"]
+    except BaseException:
+        env = None
     
     if env == "PROD":
         return ".env.prod"
