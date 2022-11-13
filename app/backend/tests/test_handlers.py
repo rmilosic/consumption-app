@@ -3,8 +3,10 @@ from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from random import randint, randrange
 
 
+from backend.models import Building, Apartment
 from backend.handlers import *
 import os
 import pathlib
@@ -18,9 +20,6 @@ class TestHandlers(TestCase):
             file = SimpleUploadedFile("mycsv.txt", bts)
             handle_file_upload_import_users(file)
             
-            
-        
-       
     
     def test_load_csv(self):
         
@@ -70,3 +69,37 @@ class TestHandlers(TestCase):
         resp = bulk_import_users(user_entries)
         
         self.assertEqual(resp[0].username, "usrnm1")
+        
+        
+    def test_create_building_records(self):
+        
+        df = pd.DataFrame(data={
+            "Št. Objekta": [2, 2, 3, 3], "col2": [3,4, 4, 4]
+        })
+        
+        result = create_building_records(df) 
+        
+        self.assertIsInstance(result[0], Building)
+        
+    def test_bulk_import_buildings(self):
+        
+        id_1 = randint(100,999)
+        id_2 = randint(100,999)
+        id_3 = randint(100,999)
+        
+        building_entries = [
+            Building(id=id_1),
+            Building(id=id_2),
+            Building(id=id_3)
+        ]
+        
+        response = bulk_import_buildings(building_entries)
+        
+        self.assertEqual(response[0].id, id_1)
+        
+        
+        
+        
+        
+        
+     
