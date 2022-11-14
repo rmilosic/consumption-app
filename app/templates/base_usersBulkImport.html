@@ -37,6 +37,14 @@
         
           <button class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Submit">Naloži</button>
         </form>
+        {% for message in messages %}
+    
+              <div class="alert alert-success">
+                  <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+              </div>
+
+          {% endfor %}
       </div>
     </div>
   </div>

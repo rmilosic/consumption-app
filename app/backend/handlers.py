@@ -71,6 +71,25 @@ def create_building_records(consumption_table: pd.DataFrame):
     buildings_entires = [Building(id=b["id"]) for b in buildings_object_list]
     return buildings_entires
 
+
+def create_apartment_entries(consumption_table: pd.DataFrame):    
+    
+    # ID - set explicitly
+
+    apartments = consumption_table[["Št. Objekta", "Št. Stan.", "id"]].drop_duplicates()
+    apartments_object_list = apartments.to_dict("records")
+    
+    apartments_entires = [Apartment(
+        id=f"{b['Št. Objekta']}/{b['Št. Stan.']}", 
+        number=f"{b['Št. Stan.']}",
+        building_id=f"{b['Št. Objekta']}",
+        owner_id=f"{b['id']}") for b in apartments_object_list]
+    return apartments_entires
+
+
+def bulk_import_apartments(apartment_entries):
+    return Apartment.objects.bulk_create(apartment_entries)
+
 def handle_file_upload_import_users(file: SimpleUploadedFile):
     
     # load CSV
@@ -102,9 +121,13 @@ def handle_file_upload_import_users(file: SimpleUploadedFile):
     building_entries = create_building_records(consumption_table)
         
     # save buildings
-    bulk_import_buildings(building_entries)
+    building_res = bulk_import_buildings(building_entries)
     
     
+    
+    apartment_entries = create_apartment_entries(consumption_table)
+    
+    apartment_res = bulk_import_apartments(apartment_entries)
     # get apartment details
     # ID - format building no. / apt. no
     # Building FK - provided
@@ -121,4 +144,4 @@ def handle_file_upload_import_users(file: SimpleUploadedFile):
         # no, % of buildings created
         # no, % of aparments created
     
-    pass
+    return f"Ustvarjenih je bilo {len(user_save_response__df)} uporabnikov, {len(building_res)} stavb ter {len(apartment_res)} stanovanj."

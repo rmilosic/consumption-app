@@ -18,7 +18,9 @@ class TestHandlers(TestCase):
         with open(os.path.join(pathlib.Path(__file__).parent.resolve(), "sample.csv"), "rb") as f:
             bts = f.read()
             file = SimpleUploadedFile("mycsv.txt", bts)
-            handle_file_upload_import_users(file)
+            result = handle_file_upload_import_users(file)
+            
+        self.assertEqual(result, "ok")
             
     
     def test_load_csv(self):
@@ -96,6 +98,17 @@ class TestHandlers(TestCase):
         response = bulk_import_buildings(building_entries)
         
         self.assertEqual(response[0].id, id_1)
+        
+        
+    def test_create_apartment_records(self):
+        
+        df = pd.DataFrame(data={
+            "Št. Objekta": [2, 3, 4, 5], "Št. Stan.": [1,2,3,4]
+        })
+        
+        result = create_apartment_entries(df) 
+        
+        self.assertIsInstance(result[0], Apartment)
         
         
         

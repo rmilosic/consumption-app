@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.utils import IntegrityError
 
 from django.shortcuts import redirect, render
 from django.views import View
@@ -56,7 +57,6 @@ class LoginView(View):
             # authenticate            
             user = authenticate(username=username, password=password)
 
-            # TODO: define responses
             if user is not None:
                 # A backend authenticated the credentials
                 login(request, user)
@@ -92,10 +92,15 @@ class UsersBulkImportView(UserPassesTestMixin, View):
     def post(self, request, *args, **kwargs):
         form = UploadUsersFromFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_file_upload_import_users(request.FILES['file'])
+            try:
+                res = handle_file_upload_import_users(request.FILES['file'])
+                messages.success(request, res)
+                return render(request, self.template_name, {"form": form})
+            except IntegrityError as e:
             # show success message
-            
-            return render(request, self.template_name, {"form": form})
+                messages.error(request, str(e.__cause__))
+                return render(request, self.template_name, {"form": form})
+                
         else:
             form = UploadUsersFromFileForm()
             # show error message
