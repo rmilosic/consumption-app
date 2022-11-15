@@ -11,7 +11,7 @@ from django.template.loader import get_template
 
 from django.contrib.auth import authenticate, login, logout
 
-from .forms import LoginForm, UploadUsersFromFileForm
+from .forms import LoginForm, UploadUsersFromFileForm, UploadConsumptionReportForm
 from .decorators import *
 
 from .handlers import handle_file_upload_import_users
@@ -113,16 +113,22 @@ class UsersBulkImportView(UserPassesTestMixin, View):
 class ConsumptionBulkImportView(View):
     # form_class = MyForm
     # initial = {'key': 'value'}
-    template_name = 'base_usersBulkImport.html'
+    template_name = 'base_consumptionBulkImport.html'
 
     def get(self, request, *args, **kwargs):
-        # form = self.form_class(initial=self.initial)
+        form = UploadConsumptionReportForm()
         # return render(request, self.template_name, {'form': form})
-         return render(request, self.template_name)
+        return render(request, self.template_name, {'form': form})
     
     def post(self, request, *args, **kwargs):
-        pass
+        # form = UploadUsersFromFileForm(request.POST, request.FILES)
+        form = UploadConsumptionReportForm()
+        # TODO: handle file
+        messages.success(request, "Uploaded")
+        return render(request, self.template_name, {"form": form})
 
+    def test_func(self):
+        return is_admin(self.request.user)
 
 
 class UserView(View):

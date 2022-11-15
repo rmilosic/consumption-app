@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+
+{% block style %}
+
+
+    {% load static %}
+
+    
+{% endblock style %}
+    
+    
+
+  {% block title %}Uvoz porabe{% endblock title %}
+
+
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h2>
+          Uvoz porabe
+        </h2>
+      </div>
+    </div>
+
+
+    <div class="row justify-content-center">
+
+      <div class="col-4 py-5">
+
+        <form enctype="multipart/form-data" action="{% url 'backend:consumptionBulkImport' %}" method="post">
+          {% csrf_token %}
+        
+          {{ form }}
+        
+          <button class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Submit">Naloži</button>
+        </form>
+        {% for message in messages %}
+    
+              <div class="alert alert-success">
+                  <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+              </div>
+
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% comment %} {{ form }}
+   {% endcomment %}
+
+    
+{% endblock content %}
