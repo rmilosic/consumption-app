@@ -25,6 +25,7 @@ from django.conf import settings
 
 from .forms import LoginForm, UploadUsersFromFileForm, UploadConsumptionReportForm
 from .decorators import *
+from .models import Building, Apartment
 
 from .handlers import handle_file_upload_import_users
 
@@ -150,7 +151,9 @@ class UserView(View):
 
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
-        return render(request, self.template_name)
+        
+        apartment = Apartment.objects.get(owner_id=request.user.id)
+        return render(request, self.template_name, context={"apartment":apartment})
         
     
     
