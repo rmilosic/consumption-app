@@ -191,3 +191,8 @@ CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS").split(",")
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = env("EMAIL_BACKEND")
+
+HOST = env("HOST")
+PROTOCOL = env("PROTOCOL")
