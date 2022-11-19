@@ -9,7 +9,6 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./app:/app
       - static_files:/var/www/uniting/static/
     networks:
       - back-tier
