@@ -33,7 +33,16 @@ def get_env_file_path():
     
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    EMAIL_HOST=(str, "localhost"),
+    EMAIL_PORT=(int, 25),
+    EMAIL_HOST_USER=(str, ""),
+    EMAIL_HOST_PASSWORD=(str, ""),
+    EMAIL_USE_TLS=(bool, False),
+    EMAIL_USE_SSL=(bool, False),
+    EMAIL_TIMEOUT=(any, None),
+    EMAIL_SSL_KEYFILE=(any, None),
+    EMAIL_SSL_CERTFILE=(any, None)
 )
 
 # Set the project base directory
@@ -196,3 +205,13 @@ EMAIL_BACKEND = env("EMAIL_BACKEND")
 
 HOST = env("HOST")
 PROTOCOL = env("PROTOCOL")
+
+EMAIL_HOST= env("EMAIL_HOST")
+EMAIL_PORT= env("EMAIL_PORT")
+EMAIL_HOST_USER= env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD= env("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS= env("EMAIL_USE_TLS")
+EMAIL_USE_SSL= env("EMAIL_USE_SSL")
+EMAIL_TIMEOUT= env("EMAIL_TIMEOUT")
+EMAIL_SSL_KEYFILE= env("EMAIL_SSL_KEYFILE")
+EMAIL_SSL_CERTFILE= env("EMAIL_SSL_CERTFILE")
