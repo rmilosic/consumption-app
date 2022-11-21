@@ -42,7 +42,8 @@ env = environ.Env(
     EMAIL_USE_SSL=(bool, False),
     EMAIL_TIMEOUT=(any, None),
     EMAIL_SSL_KEYFILE=(any, None),
-    EMAIL_SSL_CERTFILE=(any, None)
+    EMAIL_SSL_CERTFILE=(any, None),
+    DEFAULT_FROM_EMAIL=(str, "webmaster@localhost")
 )
 
 # Set the project base directory
@@ -215,3 +216,4 @@ EMAIL_USE_SSL= env("EMAIL_USE_SSL")
 EMAIL_TIMEOUT= env("EMAIL_TIMEOUT")
 EMAIL_SSL_KEYFILE= env("EMAIL_SSL_KEYFILE")
 EMAIL_SSL_CERTFILE= env("EMAIL_SSL_CERTFILE")
+DEFAULT_FROM_EMAIL= env("DEFAULT_FROM_EMAIL")

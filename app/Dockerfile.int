@@ -11,4 +11,7 @@ COPY . .
 
 ENV ENVIRONMENT="INT"
 
+# TODO: define entrypoint, automatize collectstatic
+
 CMD ["python3", "-m", "uvicorn", "consumption_app.asgi:application", "--host=0.0.0.0"]
+
