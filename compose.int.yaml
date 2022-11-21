@@ -15,7 +15,7 @@ services:
     depends_on:
       - postgres
       - caddy
-
+  # TODO: environment file source
 
   caddy:
     container_name: caddy

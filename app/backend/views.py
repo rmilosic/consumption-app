@@ -207,7 +207,6 @@ class PasswordResetView(View):
                     }
                     email = render_to_string(email_template_name, c)
                     try:
-                        # TODO: implement default email from
                         send_mail(subject, email, None , [user.email], fail_silently=False)
                     except BadHeaderError:
 

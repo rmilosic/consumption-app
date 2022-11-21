@@ -91,6 +91,8 @@ INSTALLED_APPS = [
     'backend'
 ]
 
+
+#  TODO: set lanugage https://stackoverflow.com/questions/2336785/set-language-within-a-django-view
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
