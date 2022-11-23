@@ -27,7 +27,7 @@ from .forms import LoginForm, UploadUsersFromFileForm, UploadConsumptionReportFo
 from .decorators import *
 from .models import Building, Apartment
 
-from .handlers import handle_file_upload_import_users
+from .handlers import handle_file_upload_import_users, handle_file_upload_import_consumption
 
 class IndexView(View):
     # redirect depending on user group
@@ -106,6 +106,7 @@ class UsersBulkImportView(UserPassesTestMixin, View):
         form = UploadUsersFromFileForm(request.POST, request.FILES)
         if form.is_valid():
             try:
+                
                 res = handle_file_upload_import_users(request.FILES['file'])
                 messages.success(request, res)
                 return render(request, self.template_name, {"form": form})
@@ -134,14 +135,25 @@ class ConsumptionBulkImportView(View):
         return render(request, self.template_name, {'form': form})
     
     def post(self, request, *args, **kwargs):
-        # form = UploadUsersFromFileForm(request.POST, request.FILES)
-        form = UploadConsumptionReportForm()
-        # TODO: handle file
-        messages.success(request, "Uploaded")
-        return render(request, self.template_name, {"form": form})
+        form = UploadConsumptionReportForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                season = form.cleaned_data["season"]
+                month = form.cleaned_data["month"]
+                res = handle_file_upload_import_consumption(request.FILES['file'], month=month, season=season)
+                messages.success(request, res)
+                return render(request, self.template_name, {"form": form})
+            except IntegrityError as e:
+            # show success message
+                messages.error(request, str(e.__cause__))
+                return render(request, self.template_name, {"form": form})
+                    
+        else:
+            return render(request, self.template_name, {"form": form})# TODO: handle file
 
     def test_func(self):
         return is_admin(self.request.user)
+    
 
 
 class UserView(View):

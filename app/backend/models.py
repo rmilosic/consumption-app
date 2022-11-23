@@ -19,16 +19,16 @@ class ConsumptionReport(models.Model):
         APARTMENT = 'Apartment'
         BUILDING = 'Building'
         
-    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE)
-    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE, blank=True, null=True)
+    building = models.ForeignKey(Building, on_delete=models.CASCADE, blank=True, null=True)
     type = models.CharField(max_length=16, choices=Type.choices)
-    season = models.CharField(max_length=8)
+    season = models.CharField(max_length=16)
     month = models.CharField(max_length=8) 
     period = models.CharField(max_length=32)
     ogr_povrs = models.DecimalField(max_digits=10, decimal_places=2)
     del_ogr_pov = models.DecimalField(max_digits=10, decimal_places=2)
     poraba = models.DecimalField(max_digits=10, decimal_places=2)
-    kor_fakt = models.DecimalField(max_digits=10, decimal_places=2) 
+    kor_fakt = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True) 
     osn_pd_13_clen = models.DecimalField(max_digits=10, decimal_places=2)
     korig_pd_15_1_clen = models.DecimalField(max_digits=10, decimal_places=2)
     korig_pd_povrs_15_4_clen = models.DecimalField(max_digits=10, decimal_places=2)
@@ -36,7 +36,7 @@ class ConsumptionReport(models.Model):
     prer_pd_100_19_clen = models.DecimalField(max_digits=10, decimal_places=2)
     var_del = models.DecimalField(max_digits=10, decimal_places=2)
     fiks_del = models.DecimalField(max_digits=10, decimal_places=2)
-    skp_del_poraba = models.DecimalField(max_digits=10, decimal_places=2)
+    skp_del_poraba = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
 
 class Measurment(models.Model):
