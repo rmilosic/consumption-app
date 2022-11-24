@@ -4,11 +4,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 
-from . import users, consumption
+from . import users, consumption, measurment
 
 
 def load_csv(f: SimpleUploadedFile):
     f.file.seek(0)
+    
+    # TODO: skip empty rows
     return pd.read_csv(f.file, delimiter=";")
 
 
@@ -19,7 +21,12 @@ def handle_file_upload_import_users(file: SimpleUploadedFile):
     
     # load CSV
     consumption_table = load_csv(file)
+    
+    # TODO: validate columns
 
+
+    # TODO: stop if first apartment already exists in DB
+    
     # get user details
         # Naziv stranke - first name
         # username - generate
@@ -73,8 +80,12 @@ def handle_file_upload_import_users(file: SimpleUploadedFile):
 
 
 def handle_file_upload_import_consumption(file: SimpleUploadedFile, month: str, season: str):
+    
+    
     # load CSV
     consumption_table = load_csv(file)
+    
+    # TODO: validate columns
 
     # BUILDING consumption
     # deduplicate rows
@@ -88,11 +99,32 @@ def handle_file_upload_import_consumption(file: SimpleUploadedFile, month: str, 
     building_cons_bi_resp = consumption.bulk_import_consumption_report(building_entries)
     
     
+    
+    
     # APARTMENT consumption
     # create entries for buld import
     # save data
     # get created IDs
     # save created IDs to consumption table
+    
+    
+    apartment_entries = consumption.create_apartment_consumption_entries(
+        consumption_table, season, month
+    )
+    
+    apartment_cons_bi_resp = consumption.bulk_import_consumption_report(apartment_entries)
+    
+    
+    # add id of consumptionreport to each row
+    apartment_cons_bi_resp_df = pd.DataFrame([cr.__dict__ for cr in apartment_cons_bi_resp])    
+    
+    # store correlation username - ID (For later use)
+    consumption_table = pd.merge(
+        left=consumption_table,
+        right=apartment_cons_bi_resp_df,
+        on="apartment_id",
+        how="left",
+        suffixes=(None, "_cr"))
     
     # MEASURMENTS
     # For each row, transform measurments into table, each unit separate row,
@@ -100,5 +132,9 @@ def handle_file_upload_import_consumption(file: SimpleUploadedFile, month: str, 
     # create entries
     # save data
     
+    measurment_entries = measurment.create_measurment_entries(consumption_table)
     
-    return f"Shranili smo porabo {len(building_cons_bi_resp)} objektov"
+    measurment_cons_bi_resp = measurment.bulk_import_measurments(measurment_entries)  
+    
+    
+    return f"Shranili smo porabo za {len(building_cons_bi_resp)} objektov ter {len(apartment_cons_bi_resp)} stanovanj"

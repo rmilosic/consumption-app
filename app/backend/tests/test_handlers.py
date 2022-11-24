@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from random import randint, randrange
 
 
-from backend.models import Building, Apartment, ConsumptionReport
+from backend.models import Building, Apartment, ConsumptionReport, Measurment
 from backend import handlers
 
 import pandas as pd
@@ -79,7 +79,7 @@ class TestHandlers(TestCase):
     def test_create_building_records(self):
         
         df = pd.DataFrame(data={
-            "Št. Objekta": [2, 2, 3, 3], "col2": [3,4, 4, 4]
+            "Št. Objekta": [2, 2, 3, 3], "col2": [3,4, 4, 4], "Naslov": ["Naslov 1", "Naslov 1", "Naslov 1", "Naslov 1"]
         })
         
         result = handlers.users.create_building_records(df) 
@@ -106,7 +106,7 @@ class TestHandlers(TestCase):
     def test_create_apartment_records(self):
         
         df = pd.DataFrame(data={
-            "Št. Objekta": [2, 3, 4, 5], "Št. Stan.": [1,2,3,4]
+            "Št. Objekta": [2, 3, 4, 5], "Št. Stan.": [1,2,3,4], "id": [1,2,3,4]
         })
         
         result = handlers.users.create_apartment_entries(df) 
@@ -136,4 +136,38 @@ class TestHandlers(TestCase):
     
     
         
-     
+    def test_bulk_import_apartment_consumption(self):
+        # load data
+        with open(os.path.join(pathlib.Path(__file__).parent.resolve(), "sample.csv"), "rb") as f:
+            bts = f.read()
+            file = SimpleUploadedFile("mycsv.txt", bts)
+            import_table = handlers.load_csv(file)
+        
+        month = "2022_05"
+        season = "2022/2023"
+            
+        apartment_cons_entries = handlers.consumption.create_apartment_consumption_entries(import_table, season, month)
+        
+        response = handlers.consumption.bulk_import_consumption_report(apartment_cons_entries)
+        
+        self.assertIsInstance(apartment_cons_entries[0], ConsumptionReport)
+        
+        
+    def test_create_measurment_entries(self):
+        
+        with open(os.path.join(pathlib.Path(__file__).parent.resolve(), "sample.csv"), "rb") as f:
+            bts = f.read()
+            file = SimpleUploadedFile("mycsv.txt", bts)
+            import_table = handlers.load_csv(file)
+        
+        # fake apt_id
+        import_table["apartment_id"] = 1
+        import_table["cr_id"] = 2
+        
+        result = handlers.measurment.create_measurment_entries(import_table)
+        
+        self.assertIsInstance(result[0], Measurment)
+        
+        
+        
+        

@@ -149,7 +149,7 @@ class ConsumptionBulkImportView(View):
                 return render(request, self.template_name, {"form": form})
                     
         else:
-            return render(request, self.template_name, {"form": form})# TODO: handle file
+            return render(request, self.template_name, {"form": form})
 
     def test_func(self):
         return is_admin(self.request.user)

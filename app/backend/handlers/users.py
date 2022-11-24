@@ -60,14 +60,12 @@ def create_building_records(consumption_table: pd.DataFrame):
     
     ## to be deduplicated (duplicates present)
     # ID - set explicitly
-    # TODO: name (TO be provided)
-
-    buildings = consumption_table[["Št. Objekta"]].drop_duplicates()
+    buildings = consumption_table[["Št. Objekta", "Naslov"]].drop_duplicates()
     buildings.rename({"Št. Objekta": "id"}, inplace=True, axis=1)
     buildings_object_list = buildings.to_dict("records")
     
-    buildings_entires = [Building(id=b["id"]) for b in buildings_object_list]
-    return buildings_entires
+    buildings_entries = [Building(id=b["id"], full_address=b["Naslov"]) for b in buildings_object_list]
+    return buildings_entries
 
 
 def create_apartment_entries(consumption_table: pd.DataFrame):    
