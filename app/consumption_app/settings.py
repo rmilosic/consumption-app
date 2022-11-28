@@ -172,7 +172,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'sl'
 
 TIME_ZONE = 'UTC'
 
@@ -223,3 +223,8 @@ DEFAULT_FROM_EMAIL= env("DEFAULT_FROM_EMAIL")
 
 # DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+
+
+# LOCALE_PATHS = [
+#     os.path.join(BASE_DIR, "locale")
+# ]
