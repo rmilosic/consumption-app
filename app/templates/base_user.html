@@ -28,13 +28,131 @@
     Podatki o stanovanju
   </h3>
 
-  Številka: {{apartment.number}} <br>
-  Št. Objekta: {{apartment.building.id}}
+  Številka: {{apartment.number}} <br/>
+  Št. Objekta: {{apartment.building.id}} <br/>
+  Naslov objekta: {{apartment.building.full_address}}
+
+
 
   <h3>
     Podatki o porabi
   </h3>
   
+  
+
+  
+  <label for="cars">Izberite sezono:</label>
+
+ 
+  <select name="season" id="season" onChange="window.location.href=this.value">
+
+    {% for comb in season_month_dict  %}
+  
+    <option value="/uporabnik?season={{comb.season}}" 
+    {% if season == comb.season%}selected{% endif %}
+    >{{comb.season}}</option>
+    
+    
+    {% endfor %}
+
+    <option value="/uporabnik?season=2023/2024" {% if month == "2023/2024" %}selected{% endif %}>
+      2023/2024
+    </option>
+  </select>
+
+  <br/>
+
+  <label for="seasons">Izberite mesec:</label>
+
+ 
+  <select name="month" id="month" onChange="window.location.href=this.value">
+
+  {% for comb in season_month_dict %}
+  
+  
+    <option value="/uporabnik?month={{comb.month}}" 
+    {% if month == comb.month %}selected{% endif %}
+    >
+    
+  {{comb.month}}
+  </option>
+  
+    
+  
+  {% endfor %}
+
+  <option value="/uporabnik?month=2023_02" {% if month == "2023_02" %}selected{% endif %}>
+    2023_02
+  </option>
+  
+  >
+
+  </select>
+  
+  {% if consumption_apartment %}
+    <table>
+      <tr>
+        <th>ogr_povrs</th>
+        <th>del_ogr_pov</th>
+        <th>poraba</th>
+        <th>kor_fakt</th>
+        <th>osn_pd_13_clen</th>
+        <th>korig_pd_15_1_clen</th>
+        <th>korig_pd_povrs_15_4_clen</th>
+        <th>pod_40_nad_300_18_clen</th>
+        <th>prer_pd_100_19_clen</th>
+        <th>var_del</th>
+        <th>fiks_del</th>
+        <th>skp_del_poraba</th>
+      </tr>
+
+      <tr>
+
+        <td>{{ consumption_apartment.ogr_povrs}}</td>
+        <td>{{ consumption_apartment.del_ogr_pov}}</td>
+        <td>{{ consumption_apartment.poraba}}</td>
+        <td>{{ consumption_apartment.kor_fakt}}</td>
+        <td>{{ consumption_apartment.osn_pd_13_clen}}</td>
+        <td>{{ consumption_apartment.korig_pd_15_1_clen}}</td>
+        <td>{{ consumption_apartment.korig_pd_povrs_15_4_clen}}</td>
+        <td>{{ consumption_apartment.pod_40_nad_300_18_clen}}</td>
+        <td>{{ consumption_apartment.prer_pd_100_19_clen}}</td>
+        <td>{{ consumption_apartment.var_del}}</td>
+        <td>{{ consumption_apartment.fiks_del}}</td>
+        <td>{{ consumption_apartment.skp_del_poraba}}</td>
+        
+      </tr>
+
+      <tr>
+
+        <td>{{ consumption_building.ogr_povrs}}</td>
+        <td>{{ consumption_building.del_ogr_pov}}</td>
+        <td>{{ consumption_building.poraba}}</td>
+        <td>{{ consumption_building.kor_fakt}}</td>
+        <td>{{ consumption_building.osn_pd_13_clen}}</td>
+        <td>{{ consumption_building.korig_pd_15_1_clen}}</td>
+        <td>{{ consumption_building.korig_pd_povrs_15_4_clen}}</td>
+        <td>{{ consumption_building.pod_40_nad_300_18_clen}}</td>
+        <td>{{ consumption_building.prer_pd_100_19_clen}}</td>
+        <td>{{ consumption_building.var_del}}</td>
+        <td>{{ consumption_building.fiks_del}}</td>
+        <td>{{ consumption_building.skp_del_poraba}}</td>
+        
+      </tr>
+      
+    </table>
+  {% else %}
+    
+    <p>Za izbrano sezono in mesec in vnešene porabe za ogrevanje</p>
+
+  {% endif %}
+  
+
+    
+
+    
+
+  </ul>
 </div
 
     

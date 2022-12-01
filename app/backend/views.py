@@ -25,7 +25,7 @@ from django.conf import settings
 
 from .forms import LoginForm, UploadUsersFromFileForm, UploadConsumptionReportForm
 from .decorators import *
-from .models import Building, Apartment
+from .models import Building, Apartment, ConsumptionReport
 
 from .handlers import handle_file_upload_import_users, handle_file_upload_import_consumption
 
@@ -164,8 +164,42 @@ class UserView(View):
     def get(self, request, *args, **kwargs):
         # form = self.form_class(initial=self.initial)
         
+        month = request.GET.get("month", None)
+        season = request.GET.get("season", None)
+        print("month", month)
+        
+        # get apartment
         apartment = Apartment.objects.get(owner_id=request.user.id)
-        return render(request, self.template_name, context={"apartment":apartment})
+        
+        
+        # get all apt reports  
+        consumption_apartment_all = ConsumptionReport.objects.filter(apartment_id=apartment.id)
+        
+        # get combinations of season/month
+        season_month_dict = consumption_apartment_all.values("month", "season").distinct().order_by("-month").all()
+        
+        # set first month of season if season provided
+        if season:
+            
+            # get first month for season
+            month = season_month_dict.filter(season=season)[0]["month"]
+        
+        # if month is not in request or season is not provided, get the latest month
+        if not month:
+            month = season_month_dict[0]["month"]
+        
+        # try to get result or fail
+        try:
+            consumption_apartment = consumption_apartment_all.filter(month=month).first()
+            consumption_building = ConsumptionReport.objects.filter(building_id = apartment.building.id, month=month, type="Building").first()
+        except ConsumptionReport.DoesNotExist:
+            consumption_apartment = None
+            consumption_building = None
+    
+        
+        # TODO TEST 
+        return render(request, self.template_name, context={"apartment":apartment, "consumption_apartment": consumption_apartment, "consumption_building": consumption_building,
+                                                            "season_month_dict": season_month_dict, "month": month, "season": season})
         
     
     

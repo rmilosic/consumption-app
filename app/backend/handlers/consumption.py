@@ -53,13 +53,13 @@ def create_apartment_consumption_entries(
             apartment_records.append(
                 ConsumptionReport(
                 apartment_id=a["apartment_id"],
-                # building_id=f"{b["Št. Objekta"]}",
+                building_id=a["Št. Objekta"],
                 type="Apartment",
                 season=season,
                 month=month,
                 period=a["Obdobje"],
-                ogr_povrs=Decimal(a["Objekt - ogr. površina:"].replace(",", ".")),
-                del_ogr_pov=Decimal(a["Stan. - ogr. površina:"].replace(",", ".")),
+                ogr_povrs=Decimal(a["Stan. - ogr. površina:"].replace(",", ".")),
+                del_ogr_pov=Decimal(a["Stan. - delež ogr. pov.:"].replace(",", ".")),
                 poraba=Decimal(a["Stan. - poraba enot:"].replace(",", ".")),
                 kor_fakt=Decimal(a["Stan. - korekcijski faktor"].replace(",", ".")),
                 osn_pd_13_clen=Decimal(a["Stan. - osnovni PD - 13.člen"].replace(",", ".")),

@@ -11,7 +11,10 @@ def load_csv(f: SimpleUploadedFile):
     f.file.seek(0)
     
     # TODO: skip empty rows
-    return pd.read_csv(f.file, delimiter=";")
+    df = pd.read_csv(f.file, delimiter=";")
+    
+    df.dropna(inplace=True, how="all")
+    return df
 
 
 
