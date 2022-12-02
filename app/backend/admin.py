@@ -17,6 +17,8 @@ class MeasurmentAdmin(admin.ModelAdmin):
     list_display = ('id', 'device_number', 'space', 'consumption_report')
 
 
+
+
 admin.site.register(Building, BuildingAdmin)
 admin.site.register(Apartment, ApartmentAdmin)
 admin.site.register(ConsumptionReport, ConsumptionReportAdmin)

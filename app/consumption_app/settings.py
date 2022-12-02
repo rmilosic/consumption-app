@@ -92,7 +92,6 @@ INSTALLED_APPS = [
 ]
 
 
-#  TODO: set lanugage https://stackoverflow.com/questions/2336785/set-language-within-a-django-view
 # TODO: debug toolbar https://django-debug-toolbar.readthedocs.io/en/latest/
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

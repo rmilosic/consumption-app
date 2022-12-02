@@ -10,7 +10,6 @@ from . import users, consumption, measurment
 def load_csv(f: SimpleUploadedFile):
     f.file.seek(0)
     
-    # TODO: skip empty rows
     df = pd.read_csv(f.file, delimiter=";")
     
     df.dropna(inplace=True, how="all")

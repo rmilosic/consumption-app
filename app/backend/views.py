@@ -124,7 +124,7 @@ class UsersBulkImportView(UserPassesTestMixin, View):
         return is_admin(self.request.user)
 
     
-class ConsumptionBulkImportView(View):
+class ConsumptionBulkImportView(UserPassesTestMixin, View):
     # form_class = MyForm
     # initial = {'key': 'value'}
     template_name = 'base_consumptionBulkImport.html'
@@ -133,6 +133,9 @@ class ConsumptionBulkImportView(View):
         form = UploadConsumptionReportForm()
         # return render(request, self.template_name, {'form': form})
         return render(request, self.template_name, {'form': form})
+
+    def test_func(self):
+        return is_admin(self.request.user)
     
     def post(self, request, *args, **kwargs):
         form = UploadConsumptionReportForm(request.POST, request.FILES)

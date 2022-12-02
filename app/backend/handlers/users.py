@@ -4,7 +4,7 @@ from ..models import Apartment, Building
 import pandas as pd
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
 import random
@@ -33,7 +33,6 @@ def create_user_entries(df: pd.DataFrame):
     
     user_object_list = df.to_dict("records")
     
-    # TODO: add user group
     user_entries = [User(username=u["username"], password=make_password(u["password"]), first_name=u["Naziv stranke"]) for u in user_object_list]
    
     return user_entries
@@ -48,7 +47,14 @@ def bulk_import_users(user_entries):
     #     batch = list(islice(user_entries, batch_size))
     #     if not batch:
     #         break
-    return User.objects.bulk_create(user_entries)
+    users = User.objects.bulk_create(user_entries)
+    
+    # add users to group
+    
+    # get group
+    group, created = Group.objects.get_or_create(name="client")
+    group.user_set.add(*users)
+    return users
 
 
 def bulk_import_buildings(building_entries):
