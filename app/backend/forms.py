@@ -1,10 +1,26 @@
 import datetime
 
 from django import forms
+from django.forms import TextInput, PasswordInput
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label="Uporabniško ime", max_length=50, required=True)
-    password = forms.CharField(label="Geslo", widget=forms.PasswordInput(), required=True) 
+    username = forms.CharField(
+        label="", 
+        max_length=50, 
+        required=True,
+        widget=TextInput(attrs={
+                'class': "form-control my-2",
+                'placeholder': "Uporabniško ime"
+            })
+    )
+    password = forms.CharField(
+        label="", 
+        required=True,
+        widget=PasswordInput(attrs={
+        'class': "form-control my-2",
+        'placeholder': "Geslo"
+        })
+    ) 
     
 class UploadUsersFromFileForm(forms.Form):
     file = forms.FileField(label="Datoteka", required=True)

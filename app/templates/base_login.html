@@ -53,6 +53,8 @@
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
     }
+
+   
     </style>
 
     {% load static %}
@@ -68,44 +70,58 @@
 
 {% block content %}
 <div class="container">
+
+  {% comment %} <div class="row justify-content-center">
+
+    <div class="col-8 col-md-6 col-lg-4">
+      <img src="{% static 'images/uniting-energetika - transparent 1.svg'%}" class="img-fluid" alt="Uniting Energetika Logo"/>
+    </div>
+  </div> {% endcomment %}
+
+  {% comment %} BOX {% endcomment %}
   <div class="row justify-content-center">
-    <div class="col-12">
-        <main class="form-signin w-100 m-auto text-center">
+    <div class="col-8 col-md-6 col-lg-4 box shadow">
+
+      <h2 class="mb-4"> Prijava </h2>
+        <div class="form-signin w-100 m-auto text-center">
           <form action="{% url 'backend:login' %}" method="post">
             {% csrf_token %}
-          {% comment %} <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-          <h1 class="h3 mb-3 fw-normal">Prijava v portal</h1>
-      
-          <div class="form-floating">
-              <input type="text" class="form-control" id="username" name="username" placeholder="Uporbniško ime">
-              <label for="floatingInput">Uporabniško ime</label>
-          </div>
-          <div class="form-floating">
-              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-              <label for="floatingPassword">Geslo</label>
-          </div>
-      
-          <div class="checkbox mb-3">
-              <label>
-              <input type="checkbox" value="remember-me"> Zapomni se me
-              </label>
-          </div> {% endcomment %}
+         
           {{ form }}
-          <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">Prijava</button>
+          <button class="w-75 btn btn-lg btn-primary mt-4" type="submit" value="Submit">Prijavi se</button>
           </form>
+
+
+          <div class="mt-4"><a  href="{% url 'backend:passwordReset' %}">Pozabljeno geslo</a></div>
+
 
           {% for message in messages %}
     
-              <div class="alert alert-success">
+              <div class="alert alert-danger" role="alert">
                   <a class="close" href="#" data-dismiss="alert">×</a>
                     {{ message }}
               </div>
 
           {% endfor %}
-      </main>
+
+
+          
+        </div>
     </div>
   </div>
-</div
+
+  {% comment %} Brez podatkov {% endcomment %}
+
+  <div class="row justify-content-center">
+
+    <div class="col-8 col-md-6 col-lg-4 mt-5">
+      <p class="small text-center text-secondary">
+        V kolikor še niste pridobili podatkov za dostop do nadzorne plošče za pregled porabe, 
+        nas kontaktiraje na info@uniting-energtika.si ali na +386 70 540 860.
+      </p>
+    </div>
+  </div>
+  </div>
 
     
 {% endblock content %}

@@ -17,18 +17,37 @@
 {% block content %}
 <div class="container">
 
-  <h2>
-    Administrator
-  </h2>
+  <div class="row justify-content-center">
+    <div class="col-8 col-md-6 col-lg-4 box shadow">
 
-  Username: {{user.username}} <br/>
-  Email: {{user.email}}
+      <h2> Administrator </h2>
 
-  <ul>
+      Uporabniško ime: {{user.username}} <br/>
+      E-pošta: {{user.email}}
+          
     
-      <a href="{% url 'backend:usersBulkImport' %}"><li>Uvoz stanovanj</li></a>
-      <a href="{% url 'backend:consumptionBulkImport' %}"><li>Uvoz porabe</li></a>
-  </ul>
+      
+      <div class="mt-4 vstack gap-2 align-items-center">
+        <a class="btn btn-primary w-75" href="{% url 'backend:usersBulkImport' %}">Uvoz stanovanj</a>
+        <a class="btn btn-primary w-75" href="{% url 'backend:consumptionBulkImport' %}">Uvoz porabe</a>
+      </div>
+
+          {% for message in messages %}
+    
+              <div class="alert alert-danger" role="alert">
+                  <a class="close" href="#" data-dismiss="alert">×</a>
+                    {{ message }}
+              </div>
+
+          {% endfor %}
+
+
+          
+    </div>
+  </div>
+
+  
+  
   <strong>
   </strong>
   
