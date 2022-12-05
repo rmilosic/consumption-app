@@ -25,7 +25,7 @@ from django.conf import settings
 
 from .forms import LoginForm, UploadUsersFromFileForm, UploadConsumptionReportForm
 from .decorators import *
-from .models import Building, Apartment, ConsumptionReport
+from .models import Building, Apartment, ConsumptionReport, Measurment
 
 from .handlers import handle_file_upload_import_users, handle_file_upload_import_consumption
 
@@ -195,26 +195,18 @@ class UserView(View):
         try:
             consumption_apartment = consumption_apartment_all.filter(month=month).first()
             consumption_building = ConsumptionReport.objects.filter(building_id = apartment.building.id, month=month, type="Building").first()
+            measurments = Measurment.objects.filter(consumption_report_id=consumption_apartment.id)
         except ConsumptionReport.DoesNotExist:
             consumption_apartment = None
             consumption_building = None
+            measurments = None
     
         
-        # TODO TEST 
         return render(request, self.template_name, context={"apartment":apartment, "consumption_apartment": consumption_apartment, "consumption_building": consumption_building,
-                                                            "season_month_dict": season_month_dict, "month": month, "season": season})
+                                                            "season_month_dict": season_month_dict, "month": month, "season": season, "measurments": measurments})
         
     
-    
-class ConsumptionView(View):
-    # form_class = MyForm
-    # initial = {'key': 'value'}
-    # template_name = 'form_template.html'
 
-    def get(self, request, *args, **kwargs):
-        # form = self.form_class(initial=self.initial)
-        # return render(request, self.template_name, {'form': form})
-        return HttpResponse("Poraba")
     
     
 class AdministratorView(View):

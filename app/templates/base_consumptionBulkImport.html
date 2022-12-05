@@ -35,7 +35,10 @@
         
           {{ form }}
         
-          <button class="w-100 btn btn-lg btn-primary mt-3" type="submit" value="Submit">Naloži</button>
+          <button id="bulkUploadButton" class="w-100 btn btn-lg btn-primary mt-3 load-btn" type="submit" value="Submit">
+            <span class="spinner-border spinner-border-sm visually-hidden" role="status" aria-hidden="true"></span>
+            <span class="visually-hidden">Nalagam</span>
+            Naloži</button>
         </form>
         {% comment %} # TODO:  display loading circle on click {% endcomment %}
         {% for message in messages %}

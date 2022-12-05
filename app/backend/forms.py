@@ -39,11 +39,16 @@ class UploadConsumptionReportForm(forms.Form):
         choice = (f"{this_year-i}/{this_year-i+1}", f"{this_year-i}/{this_year-i+1}")
         SEASON_CHOICES.append(choice)
     
-    for i in range(0,4):
-        for x in range(1,13):
-            choice = (f"{this_year-i}_{x}", f"{this_year-i}_{x}")
+    
+        for x in range(1,9):
+            choice = (f"{this_year-i+1}_{x:02}", f"{this_year-i+1}_{x:02}")
+            MONTH_CHOICES.append(choice)
+            
+        for y in range(9,13):
+            choice = (f"{this_year-i}_{y:02}", f"{this_year-i}_{y:02}")
             MONTH_CHOICES.append(choice)
         
+    
     
     season = forms.ChoiceField(label="Sezona", choices=SEASON_CHOICES, required=True)
     month = forms.ChoiceField(label="Mesec", choices=MONTH_CHOICES, required=True)
