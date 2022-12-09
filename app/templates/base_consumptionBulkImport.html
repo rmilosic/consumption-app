@@ -1,34 +1,18 @@
-{% extends 'base.html' %}
+{% extends 'base_admin.html' %}
 
-
-{% block style %}
-
-
-    {% load static %}
 
     
-{% endblock style %}
-    
-    
 
-  {% block title %}Uvoz porabe{% endblock title %}
+{% block title %}Uvoz porabe{% endblock title %}
 
 
-{% block content %}
+{% block admin_content %}
 
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <h2>
-          Uvoz porabe
-        </h2>
-      </div>
-    </div>
-
+  
 
     <div class="row justify-content-center">
 
-      <div class="col-4 py-5">
+      <div class="col-8 py-5 my-5 box-left shadow">
 
         <form enctype="multipart/form-data" action="{% url 'backend:consumptionBulkImport' %}" method="post">
           {% csrf_token %}
@@ -36,25 +20,30 @@
           {{ form }}
         
           <button class="w-100 btn btn-lg btn-primary mt-3 load-btn" type="submit" value="Submit">
-            {% comment %} <span class="spinner spinner-border spinner-border-sm visually-hidden" role="status" aria-hidden="true"></span>
-            <span class="visually-hidden">Nalagam</span> {% endcomment %}
             Naloži</button>
         </form>
-        {% comment %} # TODO:  display loading circle on click {% endcomment %}
         {% for message in messages %}
-    
-              <div class="alert alert-success">
-                  <a class="close" href="#" data-dismiss="alert">×</a>
-                    {{ message }}
+        
+            {% if message.level == "SUCCESS" %}
+
+            <div class="alert alert-success mt-2">
+                      <a class="close" href="#" data-dismiss="alert">×</a>
+                        {{ message }}
+                  </div>
+
+                  {% else %}
+                  <div class="alert alert-danger mt-2">
+                    <a class="close" href="#" data-dismiss="alert">×</a>
+                      {{ message }}
               </div>
+            {% endif %}
 
           {% endfor %}
       </div>
     </div>
-  </div>
 
   {% comment %} {{ form }}
    {% endcomment %}
 
     
-{% endblock content %}
+{% endblock admin_content %}

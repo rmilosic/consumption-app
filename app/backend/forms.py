@@ -1,7 +1,7 @@
 import datetime
 
 from django import forms
-from django.forms import TextInput, PasswordInput
+from django.forms import TextInput, PasswordInput, FileInput, Select
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -23,7 +23,9 @@ class LoginForm(forms.Form):
     ) 
     
 class UploadUsersFromFileForm(forms.Form):
-    file = forms.FileField(label="Datoteka", required=True)
+    file = forms.FileField(label="", required=True, widget=FileInput(attrs={
+                'class': "form-control my-2",
+            }))
     
     
     
@@ -50,6 +52,12 @@ class UploadConsumptionReportForm(forms.Form):
         
     
     
-    season = forms.ChoiceField(label="Sezona", choices=SEASON_CHOICES, required=True)
-    month = forms.ChoiceField(label="Mesec", choices=MONTH_CHOICES, required=True)
-    file = forms.FileField(label="Datoteka", required=True)
+    season = forms.ChoiceField(label="Sezona", choices=SEASON_CHOICES, required=True,widget=Select(attrs={
+                'class': "form-select my-2",
+            }))
+    month = forms.ChoiceField(label="Mesec", choices=MONTH_CHOICES, required=True, widget=Select(attrs={
+                'class': "form-select my-2"
+            }))
+    file = forms.FileField(label="Datoteka", required=True, widget=FileInput(attrs={
+                'class': "form-control my-2",
+            }))
