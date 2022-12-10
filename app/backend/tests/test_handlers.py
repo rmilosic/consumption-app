@@ -23,7 +23,7 @@ class TestHandlers(TestCase):
             file = SimpleUploadedFile("mycsv.txt", bts)
             result = handlers.handle_file_upload_import_users(file)
             
-        self.assertEqual(result, "ok")
+        self.assertIsInstance(result, object)
             
     
     def test_load_csv(self):
@@ -145,7 +145,9 @@ class TestHandlers(TestCase):
         
         month = "2022_05"
         season = "2022/2023"
-            
+        
+        handlers.handle_file_upload_import_users(file)
+        
         apartment_cons_entries = handlers.consumption.create_apartment_consumption_entries(import_table, season, month)
         
         response = handlers.consumption.bulk_import_consumption_report(apartment_cons_entries)
@@ -161,7 +163,7 @@ class TestHandlers(TestCase):
             import_table = handlers.load_csv(file)
         
         # fake apt_id
-        import_table["apartment_id"] = 1
+        import_table["id"] = 1
         import_table["cr_id"] = 2
         
         result = handlers.measurment.create_measurment_entries(import_table)

@@ -4,6 +4,8 @@ venv
 .env.int
 .DS_Store
 
+Caddyfile
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
