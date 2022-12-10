@@ -10,7 +10,6 @@ from . import users, consumption, measurment
 def load_csv(f: SimpleUploadedFile):
     f.file.seek(0)
     
-    # TODO: fix int as float
     df = pd.read_csv(f.file, delimiter=";", na_values="", skip_blank_lines=True, dtype={
         "Št. Stan.": "Int64",
         "Št. Objekta": "Int64"
