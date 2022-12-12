@@ -257,7 +257,7 @@ sentry_sdk.init(
     # environment variable, or infer a git commit
     # SHA as release, however you may want to set
     # something more human-readable.
-    release=f'consumption-app@${VERSION}',
+    release=f'consumption-app@{VERSION}',
     environment=env("ENVIRONMENT")
     
 )
