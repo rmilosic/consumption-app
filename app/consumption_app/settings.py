@@ -16,6 +16,14 @@ from django.urls import reverse
 import environ
 import os
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+from consumption_app import VERSION
+
+
+
+
 def get_env_file_path():
     try:
         env = os.environ["ENVIRONMENT"]
@@ -43,7 +51,8 @@ env = environ.Env(
     EMAIL_TIMEOUT=(any, None),
     EMAIL_SSL_KEYFILE=(any, None),
     EMAIL_SSL_CERTFILE=(any, None),
-    DEFAULT_FROM_EMAIL=(str, "webmaster@localhost")
+    DEFAULT_FROM_EMAIL=(str, "webmaster@localhost"),
+    ADMINS=(str, "Rok;rok.milosic@gmail.com")
 )
 
 # Set the project base directory
@@ -224,6 +233,31 @@ DEFAULT_FROM_EMAIL= env("DEFAULT_FROM_EMAIL")
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 
 
-# LOCALE_PATHS = [
-#     os.path.join(BASE_DIR, "locale")
-# ]
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, "locale")
+]
+
+ADMINS=list(map(lambda x: (x.split(";")[0], x.split(";")[1]), env("ADMINS").split(",")))
+
+
+sentry_sdk.init(
+    dsn="https://e4dbbb7d4d164bed9d8dcbfbffd84a60@o403993.ingest.sentry.io/4504318285447168",
+    integrations=[DjangoIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production,
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+
+    # By default the SDK will try to use the SENTRY_RELEASE
+    # environment variable, or infer a git commit
+    # SHA as release, however you may want to set
+    # something more human-readable.
+    release=f'consumption-app@${VERSION}',
+    environment=env("ENVIRONMENT")
+    
+)
