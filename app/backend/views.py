@@ -110,10 +110,11 @@ class UsersBulkImportView(UserPassesTestMixin, View):
                 res = handle_file_upload_import_users(request.FILES['file'])
                 messages.success(request, res)
                 return render(request, self.template_name, {"form": form})
-            except IntegrityError as e:
-            # show success message
-                messages.error(request, str(e.__cause__))
+            except Exception as e:
+                # show success message
+                messages.error(request, str(e))
                 return render(request, self.template_name, {"form": form})
+            
                 
         else:
             form = UploadUsersFromFileForm()

@@ -24,17 +24,17 @@
         </form>
         {% for message in messages %}
         
-            {% if message.level == "SUCCESS" %}
+            {% if message.tags == "success" %}
 
             <div class="alert alert-success mt-2">
                       <a class="close" href="#" data-dismiss="alert">×</a>
-                        {{ message }}
+                        Operacija uspešna: <br/>{{ message }}
                   </div>
 
                   {% else %}
                   <div class="alert alert-danger mt-2">
                     <a class="close" href="#" data-dismiss="alert">×</a>
-                      {{ message }}
+                      Neuspešno nalaganje. Razlog: <br/>{{ message }}
               </div>
             {% endif %}
 
