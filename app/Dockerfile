@@ -1,0 +1,17 @@
+FROM python:3.9
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+
+# RUN apt-get update && apt-get install postgresql-dev gcc python3-dev musl-dev 
+
+RUN pip3 install -r requirements.txt
+COPY . .
+
+ENV ENVIRONMENT="PROD"
+
+# TODO: define entrypoint, automatize collectstatic
+
+CMD ["python3", "-m", "uvicorn", "consumption_app.asgi:application", "--host=0.0.0.0"]
+
