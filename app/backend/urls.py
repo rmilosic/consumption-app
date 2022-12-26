@@ -18,7 +18,6 @@ from django.urls import path
 from django.views.generic.base import RedirectView
 from django.contrib.auth.decorators import login_required, permission_required
 
-
 from . import views
 
 app_name = 'backend'
@@ -32,5 +31,6 @@ urlpatterns = [
     path('uvoz-uporabnikov/', views.UsersBulkImportView.as_view(), name="usersBulkImport"),
     path('uvoz-porabe/', views.ConsumptionBulkImportView.as_view(), name="consumptionBulkImport"),
     path('administrator/', views.AdministratorView.as_view(), name="administrator"),
-    path('password_reset/', views.PasswordResetView.as_view(), name="passwordReset")
+    path('password_reset/', views.PasswordResetView.as_view(), name="passwordReset"),
+    path('export_pdf/', views.ExportPdf.as_view(), name="export_pdf")
 ]

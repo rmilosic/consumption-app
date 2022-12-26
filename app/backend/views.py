@@ -1,3 +1,4 @@
+import io
 from curses.ascii import HT
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,7 @@ from django.template.loader import get_template
 from django.contrib.auth import authenticate, login, logout
 
 from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -23,11 +24,21 @@ from django.utils.encoding import force_bytes
 
 from django.conf import settings
 
-from .forms import LoginForm, UploadUsersFromFileForm, UploadConsumptionReportForm
+from reportlab.pdfgen import canvas
+
+from .forms import LoginForm, UploadUsersFromFileForm, UploadConsumptionReportForm, ExportPdfForm
 from .decorators import *
 from .models import Building, Apartment, ConsumptionReport, Measurment
 
-from .handlers import handle_file_upload_import_users, handle_file_upload_import_consumption
+from backend.handlers import handle_file_upload_import_users, handle_file_upload_import_consumption
+from backend.handlers import context
+
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.template import Context
+from django.http import HttpResponse
+
+from weasyprint import HTML, CSS
 
 class IndexView(View):
     # redirect depending on user group
@@ -172,39 +183,43 @@ class UserView(View):
         season = request.GET.get("season", None)
         print("month", month)
         
+        user_context = context.get_user_context(month=month, season=season, owner_id=request.user.id)
+        
         # get apartment
-        apartment = Apartment.objects.get(owner_id=request.user.id)
+        # apartment = Apartment.objects.get(owner_id=request.user.id)
         
+        # # get all apt reports  
+        # consumption_apartment_all = ConsumptionReport.objects.filter(apartment_id=apartment.id)
         
-        # get all apt reports  
-        consumption_apartment_all = ConsumptionReport.objects.filter(apartment_id=apartment.id)
+        # # get combinations of season/month
+        # season_month_dict = consumption_apartment_all.values("month", "season").distinct().order_by("-month").all()
         
-        # get combinations of season/month
-        season_month_dict = consumption_apartment_all.values("month", "season").distinct().order_by("-month").all()
-        
-        # set first month of season if season provided
-        if season:
+        # # set first month of season if season provided
+        # if season:
             
-            # get first month for season
-            month = season_month_dict.filter(season=season)[0]["month"]
+        #     # get first month for season
+        #     month = season_month_dict.filter(season=season)[0]["month"]
         
-        # if month is not in request or season is not provided, get the latest month
-        if not month:
-            month = season_month_dict[0]["month"]
+        # # if month is not in request or season is not provided, get the latest month
+        # if not month:
+        #     month = season_month_dict[0]["month"]
+        #     season = season_month_dict[0]["season"]
         
-        # try to get result or fail
-        try:
-            consumption_apartment = consumption_apartment_all.filter(month=month).first()
-            consumption_building = ConsumptionReport.objects.filter(building_id = apartment.building.id, month=month, type="Building").first()
-            measurments = Measurment.objects.filter(consumption_report_id=consumption_apartment.id)
-        except ConsumptionReport.DoesNotExist:
-            consumption_apartment = None
-            consumption_building = None
-            measurments = None
+        # # try to get result or fail
+        # try:
+        #     consumption_apartment = consumption_apartment_all.filter(month=month).first()
+        #     consumption_building = ConsumptionReport.objects.filter(building_id = apartment.building.id, month=month, type="Building").first()
+        #     measurments = Measurment.objects.filter(consumption_report_id=consumption_apartment.id)
+        # except ConsumptionReport.DoesNotExist:
+        #     consumption_apartment = None
+        #     consumption_building = None
+        #     measurments = None
+            
+        form = ExportPdfForm(initial={"month": month, "season": season})
     
         
-        return render(request, self.template_name, context={"apartment":apartment, "consumption_apartment": consumption_apartment, "consumption_building": consumption_building,
-                                                            "season_month_dict": season_month_dict, "month": month, "season": season, "measurments": measurments})
+        return render(request, self.template_name, context={"apartment":user_context["apartment"], "consumption_apartment": user_context["consumption_apartment"], "consumption_building": user_context["consumption_building"],
+                                                            "season_month_dict": user_context["season_month_dict"], "month": month, "season": season, "measurments":user_context["measurments"], "form": form})
         
     
 
@@ -256,3 +271,60 @@ class PasswordResetView(View):
                         
                     messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
             return redirect ("password_reset_done")
+        
+        
+class ExportPdf(View):
+    
+    def post(self, request, *args, **kwargs):
+        
+        # buffer = io.BytesIO()
+
+        # Create the PDF object, using the buffer as its "file."
+        # p = canvas.Canvas(buffer)
+        
+        month = request.POST.get("month", None)
+        season = request.POST.get("season", None)
+        
+        user_context = context.get_user_context(month, season, request.user.id)
+        # html = render(request, )
+        # print("month", month)
+        
+        # build user context
+        template = get_template("base_user.html")
+        # ctx = Context(user_context)
+        user_context["user"]=request.user
+        html = HTML(string=template.render(user_context))
+        buffer = io.BytesIO()
+        
+        css = CSS(string='''
+            @page { 
+                size: A2 landscape; 
+                margin: 0in 0.44in 0.2in 0.44in;
+            }''')
+        html.write_pdf(buffer, stylesheets=[css])
+        
+
+        # pdf = pisa.pisaDocument(io.BytesIO(html.encode()), result, encoding="utf-8")
+        # get HTML of rendered template
+
+
+        # Draw things on the PDF. Here's where the PDF generation happens.
+        # See the ReportLab documentation for the full list of functionality.
+        # p.drawString(100, 100, str(user_context["consumption_apartment"]))
+
+        # Close the PDF object cleanly, and we're done.
+        # p.showPage()
+        # p.save()
+        
+        # if not pdf.err:
+        #     return HttpResponse(result.getvalue(), content_type='application/pdf')
+        # return HttpResponse('We had some errors<pre>%s</pre>')
+
+        # FileResponse sets the Content-Disposition header so that browsers
+        # present the option to save the file.
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
+    
+    
+# def fetch_resources():
+    

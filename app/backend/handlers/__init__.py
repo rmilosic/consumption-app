@@ -4,7 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 
-from . import users, consumption, measurment
+from . import users, consumption, measurment, context
 
 
 def load_csv(f: SimpleUploadedFile):

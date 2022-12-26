@@ -61,3 +61,9 @@ class UploadConsumptionReportForm(forms.Form):
     file = forms.FileField(label="Datoteka", required=True, widget=FileInput(attrs={
                 'class': "form-control my-2",
             }))
+    
+    
+class ExportPdfForm(forms.Form):
+    
+    season = forms.CharField(widget=forms.HiddenInput(), required=False)
+    month = forms.CharField(widget=forms.HiddenInput(), required=False)
