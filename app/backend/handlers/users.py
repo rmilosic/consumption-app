@@ -57,16 +57,24 @@ def bulk_import_users(user_entries):
     return users
 
 
+# def bulk_import_buildings(building_entries):
+    
+    # return Building.objects.bulk_create(building_entries)
+
 def bulk_import_buildings(building_entries):
-    
-    return Building.objects.bulk_create(building_entries)
-    
+    created_buildings = []
+    for building in building_entries:
+        obj, created = Building.objects.update_or_create(id=building.id, full_address=building.full_address)
+        if created:
+            created_buildings.append(obj)   
+    return created_buildings
+        
 
 def create_building_records(consumption_table: pd.DataFrame):    
     
     ## to be deduplicated (duplicates present)
     # ID - set explicitly
-    buildings = consumption_table[["Št. Objekta", "Naslov"]].drop_duplicates()
+    buildings = consumption_table[["Št. Objekta", "Naslov"]].drop_duplicates(subset="Št. Objekta")
     buildings.rename({"Št. Objekta": "id"}, inplace=True, axis=1)
     buildings_object_list = buildings.to_dict("records")
     
